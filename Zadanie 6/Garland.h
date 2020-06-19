@@ -5,8 +5,9 @@ template<typename T>
 class Garland
 {
 public:
-	Garland();
-	~Garland();
+	Garland<T>();//constructor
+	Garland<T>(const Garland<T>& a);
+	~Garland<T>(); //destructor
 	void pop_front();//Udalenie pervogo
 	void push_back(T data);//Dobavlenie v konez
 	void clear();// очистить список
@@ -18,9 +19,8 @@ public:
 	void pop_back();//Udalenie poslednego elementa v massive
 	void Print(int a);//Vivod vsego masiva, s collor
 	void coup();//Perevorot
-	//void sort(); //Nepolu4ilas
+	void sort(); //Nepolu4ilas
 private:
-
 
 	template<typename T>
 	class Bulbs
@@ -36,29 +36,24 @@ private:
 	};
 	int Kol;
 	Bulbs<T>* first;
-
-	Bulbs<T>* Nomer(int index) {
-		int counter = 0;
-
-		Bulbs<T>* current = this->first;
-
-		while (current != nullptr)
-		{
-			if (counter == index)
-			{
-				return current->Next;
-			}
-			current = current->Next;
-			counter++;
-		}
-		return this->first;
-	}
 };
 template<typename T>
 Garland<T>::Garland()
 {
 	Kol = 0;
 	first = nullptr;
+}
+
+template<typename T>
+inline Garland<T>::Garland(const Garland<T>& a)
+{
+	Kol = 0;
+	first = nullptr;
+	Bulbs<T>* cur = a.first;
+	while (cur) {
+		push_back(cur->data);
+		cur = cur->Next;
+	}
 }
 
 
@@ -210,17 +205,25 @@ void Garland<T>::Print(int a)
 	cout << "\033[0m" << endl;
 }
 
-//template<class T>    Сортировка не получилась Nepolu4ilas
-//void Garland<T>::sort()
-//{
-//	for (int i = 1; i < sizeElement(); i++) {
-//		Bulbs<T>* ly = Nomer(i-1);
-//		removeAt(i);
-//		int j;
-//		for (j = i - 1; j >= 0 && j > ly->data; j--);
-//		insert(ly->data,j+1);
-//	}
-//}
+template<class T>    
+void Garland<T>::sort()
+{
+	Bulbs<T>* cur1,*cur2 = nullptr,*prev1 ,*prev2 = nullptr;
+	if (!first)return;
+	prev1 = this->first; cur1 = prev1->Next;
+	while(cur1) {
+		cur2 = this->first; prev2 = nullptr;
+		while (cur2!=cur1&&cur2->data<cur1->data) {prev2 = cur2;cur2 = cur2->Next;} 
+		if (cur1==cur2) {prev1 = cur1;cur1 = cur1->Next;}
+		else {
+			prev1->Next = cur1->Next;
+			if (prev2)prev2->Next = cur1;
+			else first = cur1;
+			cur1->Next = cur2;
+			cur1 = prev1->Next;
+		}
+	}
+}
 //6 Variant
 //template<typename T>
 //void Garland<T>::coup() {
@@ -238,48 +241,66 @@ void Garland<T>::Print(int a)
 //	}
 //}
 //6 Variant 
+//template<typename T>
+//void Garland<T>::coup() {
+//	int End = Kol - 1;
+//	Bulbs<T>* start = this->first;
+//	Bulbs<T>* finish = Nomer(End - 1); //ссылка на последний элемент
+//	/*cout << "\033[2;31m" << start->data << "\033[0m";
+//	cout << "\033[2;33m" << finish->data << "\033[0m";*/
+//	Bulbs<T>* f1;
+//	Bulbs<T>* f2 = Nomer(End - 1);
+//	for (int i = End - 1; i >= 1; i--) {
+//		f1 = Nomer(i);
+//		f2 = Nomer(i - 1);
+//		f1->Next = f2;
+//		/*cout << "\033[2;33m" << f1->data << "\033[0m";*/
+//	}
+//	f2->Next = start;
+//	this->first = finish;
+//	start->Next = nullptr;
+//
+//
+//
+//	//Bulbs<T>* p2;
+//	//Bulbs<T>* prev_p2=first;
+//	//Bulbs<T>* tmp_pos;
+//	//cout << "\033[2;31m" << "\033[0m";
+//	//for (int i = 0; i < Per; i++) {
+//	//	prev_p2 = prev_p2->Next;
+//	//	cout << "\033[2;31m" << prev_p2->data << "\033[0m";
+//	//}
+//	//p2 = prev_p2->Next;
+//	//for (int i = 0; i < Vto; i++) {
+//	//	prev_p1 = prev_p1->Next;
+//	//	cout << "\033[2;31m" << prev_p1->data << "\033[0m";
+//	//}
+//	//p1 = prev_p1->Next;
+//
+//	///*cout <<"\033[2;31m"<< p2->data <<"\033[0m";
+//	//cout << "\033[2;33m" << p1->data << "\033[0m";*/
+//
+//	//tmp_pos = p2->Next;
+//	//p2->Next = p1->Next;
+//	//p1->Next = tmp_pos;
+//	//	prev_p2->Next = p1;
+//	//	prev_p1->Next = p2;
+//}
 template<typename T>
 void Garland<T>::coup() {
-	int End = Kol - 1;
-	Bulbs<T>* start = this->first;
-	Bulbs<T>* finish = Nomer(End - 1); //ссылка на последний элемент
-	/*cout << "\033[2;31m" << start->data << "\033[0m";
-	cout << "\033[2;33m" << finish->data << "\033[0m";*/
-	Bulbs<T>* f1;
-	Bulbs<T>* f2 = Nomer(End - 1);
-	for (int i = End - 1; i >= 1; i--) {
-		f1 = Nomer(i);
-		f2 = Nomer(i - 1);
-		f1->Next = f2;
-		/*cout << "\033[2;33m" << f1->data << "\033[0m";*/
+	if (Kol == 1)return;
+	Bulbs<T>* KI = this->first;
+	Bulbs<T>* Pa=KI,*Do=KI;
+	if (Kol != 1) 
+	for (int i = 1; i < Kol; i++) {
+		if (i == 1) {
+			Pa = KI->Next; KI->Next = nullptr; continue;
+		}
+		Do = Pa->Next;
+		Pa->Next = KI;
+		KI = Pa; Pa = Do;
 	}
-	f2->Next = start;
-	this->first = finish;
-	start->Next = nullptr;
-
-
-
-	//Bulbs<T>* p2;
-	//Bulbs<T>* prev_p2=first;
-	//Bulbs<T>* tmp_pos;
-	//cout << "\033[2;31m" << "\033[0m";
-	//for (int i = 0; i < Per; i++) {
-	//	prev_p2 = prev_p2->Next;
-	//	cout << "\033[2;31m" << prev_p2->data << "\033[0m";
-	//}
-	//p2 = prev_p2->Next;
-	//for (int i = 0; i < Vto; i++) {
-	//	prev_p1 = prev_p1->Next;
-	//	cout << "\033[2;31m" << prev_p1->data << "\033[0m";
-	//}
-	//p1 = prev_p1->Next;
-
-	///*cout <<"\033[2;31m"<< p2->data <<"\033[0m";
-	//cout << "\033[2;33m" << p1->data << "\033[0m";*/
-
-	//tmp_pos = p2->Next;
-	//p2->Next = p1->Next;
-	//p1->Next = tmp_pos;
-	//	prev_p2->Next = p1;
-	//	prev_p1->Next = p2;
+	Pa->Next = KI;
+	first = Pa;
+	
 }

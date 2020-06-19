@@ -5,7 +5,22 @@
 
 int main()
 {
-
+    /*Garland<int>A;
+    A.push_back(1);
+    A.push_back(2);
+    A.push_back(3);
+    A.push_back(4);
+    A.push_back(5);
+    A.push_back(6);
+    A.push_back(7);
+    A.push_back(8);
+    A.push_back(9);
+    A.push_back(10);
+    A.Print(2);
+    A.coup();
+    A.Print(3);
+    A.sort();
+    A.Print(1);*/
     int a;
     ifstream in("text.txt");
     in >> a;
